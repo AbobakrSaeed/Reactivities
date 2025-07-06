@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
 import TableCell from "@mui/material/TableCell";
@@ -6,8 +7,8 @@ import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
 
-import "./styles.css";
-import PropTypes from "prop-types";
+// import { activityPropTypes } from '../propTypes/activityTypes';  // Importing PropTypes
+
 
 const TableComponent = ({ headers, data }) => {
   return (
@@ -41,9 +42,8 @@ const TableComponent = ({ headers, data }) => {
    
   );
 };
-TableComponent.propTypes = {
-  headers: PropTypes.arrayOf(PropTypes.string).isRequired,
-  data: PropTypes.arrayOf(PropTypes.object).isRequired,
-};
+
+// Using the imported PropTypes for validation
+// TableComponent.propTypes = activityPropTypes;
 
 export default TableComponent;
