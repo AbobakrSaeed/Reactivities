@@ -1,36 +1,40 @@
-import { useEffect, useState} from 'react';
-import axios from 'axios';
+import { useEffect, useState } from "react";
+import axios from "axios";
+import "./styles.css";
+import TableComponent from "./TableComponent"; // Importing the reusable Table component
+import Typography from "@mui/material/Typography"; // Importing Material-UI Typography for consistent styling
 
 const Activities = () => {
+  const [activities, setActivities] = useState([]);
 
-    const [activities, setActivities] = useState([]);
+  useEffect(() => {
+    axios("https://localhost:5001/api/activities")
+      .then((response) => {
+        setActivities(response.data);
+      })
+      .catch((error) => {
+        console.error("There was an error fetching the activities!", error);
+      });
+  }, []);
 
-    useEffect(() => {
-        axios('https://localhost:5001/api/activities')
-        .then(response => {
-            setActivities(response.data);
-        })
-        .catch(error => {
-            console.error("There was an error fetching the activities!", error);
-        }
-        );
-    }, []);
+  const headers = [
+    "Title",
+    "Description",
+    "Date",
+    "Category",
+    "City",
+    "Venue",
+    "Latitude",
+    "Longitude",
+  ];
+
   return (
     <>
-    <div>Activities</div>
-    {
-        activities.map((activity, index) =>
-            <div key={index} className="activity">
-                <h3>{activity.title}</h3>
-                <p>{activity.description}</p>
-                <p><strong>Date:</strong> {new Date(activity.date).toLocaleDateString()}</p>
-                <p><strong>Category:</strong> {activity.category}</p>
-            </div>
-        )
-    }
+        <Typography variant="h3">Activities</Typography>
+      
+      <TableComponent headers={headers} data={activities} />
     </>
-    
-  )
-}
+  );
+};
 
-export default Activities
+export default Activities;
