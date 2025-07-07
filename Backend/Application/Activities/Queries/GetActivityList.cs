@@ -1,7 +1,7 @@
-using System;
 using Domain;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using Persistence;
 
 namespace Application.Activities.Queries;
@@ -25,3 +25,14 @@ public class GetActivityList
     }
 
 }
+
+/*
+// simulate a delay to mimic a real-world scenario where the client might cancel the request
+            for (var i = 0; i < 10; i++)
+            {
+                // If the cancellation is requested, throw an OperationCanceledException
+                cancellationToken.ThrowIfCancellationRequested();
+                await Task.Delay(200, cancellationToken);
+                logger.LogInformation("Fetching activities... {Iteration}", i + 1);
+            }
+*/
