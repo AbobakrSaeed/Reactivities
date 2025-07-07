@@ -7,7 +7,7 @@ namespace Application.Activities.Queries;
 
 public class GetActivityDetail
 {
-    public class Query : IRequest<Activity>
+    public class Query : IRequest<Activity> // return an Activity object
     {
         public required string Id { get; set; }
      }
@@ -17,7 +17,7 @@ public class GetActivityDetail
         {
             var activity = await context.Activities.FindAsync([request.Id], cancellationToken);
             if(activity == null) throw new Exception("Activity not found");
-            
+
             return activity;
         }
     }

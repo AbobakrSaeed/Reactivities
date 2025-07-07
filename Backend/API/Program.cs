@@ -1,4 +1,6 @@
+using System.Reflection;
 using Application.Activities.Queries;
+using Application.Core;
 using Microsoft.EntityFrameworkCore;
 using Persistence;
 
@@ -7,8 +9,7 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 
 builder.Services.AddControllers();
-// Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
-// builder.Services.AddOpenApi();
+
 
 //## Register the DbContext with SQLite
 builder.Services.AddDbContext<AppDbContext>(options =>
@@ -19,6 +20,7 @@ builder.Services.AddCors();
 
 //## Register MediatR for handling queries and commands
 builder.Services.AddMediatR(x => x.RegisterServicesFromAssemblyContaining<GetActivityList.Handler>());
+
 
 var app = builder.Build();
 
