@@ -1,1 +1,9 @@
-{}
+{
+  "javascript.suggest.autoImports": true,
+  "typescript.suggest.autoImports": true, // Although this applies to TypeScript, keep it as fallback
+  "javascript.suggest.enabled": true,
+  "editor.quickSuggestions": {
+    "strings": true,
+    "other": true
+  }
+}

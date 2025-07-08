@@ -1,14 +1,15 @@
 /* eslint-disable react/prop-types */
-import Table from "@mui/material/Table";
-import TableBody from "@mui/material/TableBody";
-import TableCell from "@mui/material/TableCell";
-import TableContainer from "@mui/material/TableContainer";
-import TableHead from "@mui/material/TableHead";
-import TableRow from "@mui/material/TableRow";
-import Paper from "@mui/material/Paper";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  Paper,
+} from "@mui/material";
 
 // import { activityPropTypes } from '../propTypes/activityTypes';  // Importing PropTypes
-
 
 const TableComponent = ({ headers, data }) => {
   return (
@@ -31,7 +32,9 @@ const TableComponent = ({ headers, data }) => {
                 sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
               >
                 {Object.values(newRow).map((cell) => (
-                  <TableCell key={id} component="th" scope="row">{cell}</TableCell>
+                  <TableCell key={id} component="th" scope="row">
+                    {cell}
+                  </TableCell>
                 ))}
               </TableRow>
             );
@@ -39,7 +42,6 @@ const TableComponent = ({ headers, data }) => {
         </TableBody>
       </Table>
     </TableContainer>
-   
   );
 };
 
