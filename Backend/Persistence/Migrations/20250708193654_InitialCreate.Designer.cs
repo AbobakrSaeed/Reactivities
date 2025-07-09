@@ -11,7 +11,7 @@ using Persistence;
 namespace Persistence.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20250705123822_InitialCreate")]
+    [Migration("20250708193654_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -39,12 +39,6 @@ namespace Persistence.Migrations
                     b.Property<string>("Description")
                         .IsRequired()
                         .HasColumnType("TEXT");
-
-                    b.Property<double>("Latitude")
-                        .HasColumnType("REAL");
-
-                    b.Property<double>("Longitude")
-                        .HasColumnType("REAL");
 
                     b.Property<string>("Title")
                         .IsRequired()

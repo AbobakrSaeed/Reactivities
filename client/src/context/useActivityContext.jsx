@@ -31,41 +31,10 @@ export const ActivityProvider = ({ children }) => {
     setFormVisible(true);
   };
 
-  const deleteActivity = (activityId) => {
-    // setActivities(activities.filter((activity) => activity.id !== activityId));
-    // if (activityId == selectedActivity?.id) {
-    //   setSelectedActivity(undefined);
-    //   setActivityCardVisible(false);
-    //   setFormVisible(false);
-    // }
+  const hideForm = () => {
+    setFormVisible(false);
   };
-
-  const hideForm = () => setFormVisible(false);
   const hideCard = () => setActivityCardVisible(false);
-
-  const onFormSubmit = (activity) => {
-    console.log("Form Data Submitted:", activity);
-
-    // If activity has an id, update existing activity
-    // if (activity.id) {
-    //   setActivities(
-    //     activities.map((a) => (a.id === activity.id ? activity : a))
-    //   );
-    //   setSelectedActivity(activity);
-    // }
-    // // Create new activity
-    // else {
-    //   const newActivity = {
-    //     ...activity,
-    //     id: Date.now(), // Using Date.now() as a temporary unique ID
-    //   };
-
-    //   setActivities((prevActivities) => [...prevActivities, newActivity]);
-    //   setSelectedActivity(newActivity);
-    // }
-    // setFormVisible(false);
-    // setActivityCardVisible(true);
-  };
 
   return (
     <ActivityContext.Provider
@@ -81,8 +50,6 @@ export const ActivityProvider = ({ children }) => {
         editActivity,
         hideForm,
         hideCard,
-        onFormSubmit,
-        deleteActivity,
       }}
     >
       {children}

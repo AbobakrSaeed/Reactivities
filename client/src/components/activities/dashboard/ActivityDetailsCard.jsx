@@ -9,9 +9,13 @@ import {
 } from "@mui/material";
 import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
 import { useState, useEffect } from "react";
+import { useActivityContext } from "../../../context/useActivityContext";
 
 const ActivityDetailsCard = ({ activity, onEdit, onCancel }) => {
-  const { title, date, description, category } = activity;
+  const { activities } = useActivityContext();
+  const { title, date, description, category } = activities.find(
+    (a) => (a.id = activity.id)
+  );
 
   const formattedDate = new Date(date).toLocaleDateString(undefined, {
     weekday: "short",

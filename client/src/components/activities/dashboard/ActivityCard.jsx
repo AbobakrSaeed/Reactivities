@@ -12,9 +12,11 @@ import {
 import LocationOnIcon from "@mui/icons-material/LocationOn";
 import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
 import LocalBarIcon from "@mui/icons-material/LocalBar";
+import useActivities from "../../../libs/hooks/useActivities";
 
-const ActivityCard = ({ activity, onView, onDelete }) => {
-  const { title, description, date, category, city, venue } = activity;
+const ActivityCard = ({ activity, onView }) => {
+  const { id, title, description, date, category, city, venue } = activity;
+  const { deleteActivity } = useActivities();
 
   const formattedDate = new Date(date).toLocaleDateString(undefined, {
     weekday: "short",
@@ -83,7 +85,8 @@ const ActivityCard = ({ activity, onView, onDelete }) => {
               size="small"
               variant="outlined"
               color="error"
-              onClick={onDelete}
+              onClick={() => deleteActivity.mutate(id)}
+              disabled={deleteActivity.isPending}
             >
               Delete
             </Button>

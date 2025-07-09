@@ -9,7 +9,7 @@ import {
 } from "@mui/material";
 
 import { Adb as AdbIcon } from "@mui/icons-material";
-import { useActivityContext } from "../context/ActivityContext";
+import { useActivityContext } from "../context/useActivityContext";
 
 const pages = ["Products", "Pricing", "Blog"];
 

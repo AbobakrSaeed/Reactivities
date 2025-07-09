@@ -20,8 +20,7 @@ public class DbInitializer
                 Category = "drinks",
                 City = "London",
                 Venue = "The Lamb and Flag, 33, Rose Street, Seven Dials, Covent Garden, London, Greater London, England, WC2E 9EB, United Kingdom",
-                Latitude = 51.51171665,
-                Longitude = -0.1256611057818921,
+ 
             },
             new() {
                 Title = "Past Activity 2",
@@ -30,8 +29,7 @@ public class DbInitializer
                 Category = "culture",
                 City = "Paris",
                 Venue = "Louvre Museum, Rue Saint-Honoré, Quartier du Palais Royal, 1st Arrondissement, Paris, Ile-de-France, Metropolitan France, 75001, France",
-                Latitude = 48.8611473,
-                Longitude = 2.33802768704666
+
             },
             new() {
                 Title = "Future Activity 1",
@@ -40,8 +38,7 @@ public class DbInitializer
                 Category = "culture",
                 City = "London",
                 Venue = "Natural History Museum",
-                Latitude = 51.496510900000004,
-                Longitude = -0.17600190725447445
+
             },
             new() {
                 Title = "Future Activity 2",
@@ -50,8 +47,7 @@ public class DbInitializer
                 Category = "music",
                 City = "London",
                 Venue = "The O2",
-                Latitude = 51.502936649999995,
-                Longitude = 0.0032029278126681844
+
             },
             new()
             {
@@ -61,8 +57,7 @@ public class DbInitializer
                 Category = "drinks",
                 City = "London",
                 Venue = "The Mayflower",
-                Latitude = 51.501778,
-                Longitude = -0.053577
+
             },
             new()
             {
@@ -72,8 +67,7 @@ public class DbInitializer
                 Category = "drinks",
                 City = "London",
                 Venue = "The Blackfriar",
-                Latitude = 51.512146650000005,
-                Longitude = -0.10364680647106028
+
             },
             new()
             {
@@ -83,8 +77,7 @@ public class DbInitializer
                 Category = "culture",
                 City = "London",
                 Venue = "Sherlock Holmes Museum, 221b, Baker Street, Marylebone, London, Greater London, England, NW1 6XE, United Kingdom",
-                Latitude = 51.5237629,
-                Longitude = -0.1584743
+
             },
             new()
             {
@@ -94,8 +87,7 @@ public class DbInitializer
                 Category = "music",
                 City = "London",
                 Venue = "Roundhouse, Chalk Farm Road, Maitland Park, Chalk Farm, London Borough of Camden, London, Greater London, England, NW1 8EH, United Kingdom",
-                Latitude = 51.5432505,
-                Longitude = -0.15197608174931165
+
             },
             new()
             {
@@ -105,8 +97,7 @@ public class DbInitializer
                 Category = "travel",
                 City = "London",
                 Venue = "River Thames, England, United Kingdom",
-                Latitude = 51.5575525,
-                Longitude = -0.781404
+
             },
             new()
             {
@@ -116,8 +107,7 @@ public class DbInitializer
                 Category = "film",
                 City = "London",
                 Venue = "River Thames, England, United Kingdom",
-                Latitude = 51.5575525,
-                Longitude = -0.781404
+  
             }
         };
 

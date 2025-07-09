@@ -8,6 +8,7 @@ import {
   Grid,
   MenuItem,
 } from "@mui/material";
+import useActivities from "../../../libs/hooks/useActivities";
 
 const categoryOptions = [
   "drinks",
@@ -18,13 +19,27 @@ const categoryOptions = [
   "food",
 ];
 
-export const ActivityForm = ({ initialData, onSubmit, onCancel }) => {
+export const ActivityForm = ({ initialData, onCancel }) => {
+  const { updateActivity, createActivity } = useActivities();
+
   const handleSubmit = (e) => {
     e.preventDefault();
+
     const formData = new FormData(e.target);
     const data = Object.fromEntries(formData.entries());
-    if (initialData) data.id = initialData.id; // Include id if editing an existing activity
-    onSubmit(data);
+
+    // to convert from "2025-05-05T18:08" to "2025-05-05T18:08:53.974063"
+    // data.date = new Date(data.date).toISOString().replace("Z", "");
+
+    if (initialData) {
+      data.id = initialData.id;
+      updateActivity.mutate(data);
+      console.log(data);
+      onCancel();
+    } else {
+      createActivity.mutate(data);
+      onCancel();
+    }
     e.target.reset(); // Reset the form after submission
   };
 
@@ -43,6 +58,9 @@ export const ActivityForm = ({ initialData, onSubmit, onCancel }) => {
           backgroundColor: "#fff",
         }}
       >
+        {updateActivity.error && (
+          <Typography>{updateActivity.error.message}</Typography>
+        )}
         <Typography variant="h5" mb={3}>
           {initialData ? "Edit Activity" : "Create Activity"}
         </Typography>
@@ -77,6 +95,7 @@ export const ActivityForm = ({ initialData, onSubmit, onCancel }) => {
               name="date"
               type="datetime-local"
               defaultValue={
+                // to convert from "2025-05-05T18:08:53.974063" to "2025-05-05T18:08"
                 initialData?.date
                   ? new Date(initialData.date).toISOString().slice(0, 16)
                   : ""
@@ -127,7 +146,11 @@ export const ActivityForm = ({ initialData, onSubmit, onCancel }) => {
           <Button variant="outlined" onClick={onCancel}>
             Cancel
           </Button>
-          <Button type="submit" variant="contained">
+          <Button
+            type="submit"
+            variant="contained"
+            disabled={updateActivity.isPending || createActivity.isPending}
+          >
             {initialData ? "Update" : "Create"}
           </Button>
         </Box>
