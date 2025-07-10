@@ -13,8 +13,9 @@ import LocationOnIcon from "@mui/icons-material/LocationOn";
 import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
 import LocalBarIcon from "@mui/icons-material/LocalBar";
 import useActivities from "../../../libs/hooks/useActivities";
+import { Link } from "react-router";
 
-const ActivityCard = ({ activity, onView }) => {
+const ActivityCard = ({ activity }) => {
   const { id, title, description, date, category, city, venue } = activity;
   const { deleteActivity } = useActivities();
 
@@ -78,7 +79,7 @@ const ActivityCard = ({ activity, onView }) => {
 
           {/* Buttons group on the right */}
           <Box display="flex" gap={1}>
-            <Button size="small" variant="contained" onClick={onView}>
+            <Button component={Link} to={`/activities/${id}`} size="small" variant="contained" >
               View
             </Button>
             <Button

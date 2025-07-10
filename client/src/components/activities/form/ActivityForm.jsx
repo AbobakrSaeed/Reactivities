@@ -9,6 +9,7 @@ import {
   MenuItem,
 } from "@mui/material";
 import useActivities from "../../../libs/hooks/useActivities";
+import { Link, useNavigate, useParams } from "react-router";
 
 const categoryOptions = [
   "drinks",
@@ -19,10 +20,12 @@ const categoryOptions = [
   "food",
 ];
 
-export const ActivityForm = ({ initialData, onCancel }) => {
-  const { updateActivity, createActivity } = useActivities();
+export const ActivityForm = () => {
+  const { id } = useParams();
+  const { activity, updateActivity, createActivity } = useActivities(id);
+  const navigate = useNavigate();
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     const formData = new FormData(e.target);
@@ -31,14 +34,15 @@ export const ActivityForm = ({ initialData, onCancel }) => {
     // to convert from "2025-05-05T18:08" to "2025-05-05T18:08:53.974063"
     // data.date = new Date(data.date).toISOString().replace("Z", "");
 
-    if (initialData) {
-      data.id = initialData.id;
-      updateActivity.mutate(data);
-      console.log(data);
-      onCancel();
+    if (activity) {
+      data.id = activity.id;
+      await updateActivity.mutateAsync(data);
+      navigate(`/activities/${id}`);
     } else {
-      createActivity.mutate(data);
-      onCancel();
+      createActivity.mutate(data, {
+        onSuccess: (id) => navigate(`/activities/${id}`),
+      });
+      navigate(`/activities`);
     }
     e.target.reset(); // Reset the form after submission
   };
@@ -62,7 +66,7 @@ export const ActivityForm = ({ initialData, onCancel }) => {
           <Typography>{updateActivity.error.message}</Typography>
         )}
         <Typography variant="h5" mb={3}>
-          {initialData ? "Edit Activity" : "Create Activity"}
+          {activity ? "Edit Activity" : "Create Activity"}
         </Typography>
 
         <Grid container spacing={2} direction="column" width={500}>
@@ -71,7 +75,7 @@ export const ActivityForm = ({ initialData, onCancel }) => {
               fullWidth
               label="Title"
               name="title"
-              defaultValue={initialData?.title || ""}
+              defaultValue={activity?.title || ""}
               required
             />
           </Grid>
@@ -83,7 +87,7 @@ export const ActivityForm = ({ initialData, onCancel }) => {
               name="description"
               multiline
               rows={3}
-              defaultValue={initialData?.description || ""}
+              defaultValue={activity?.description || ""}
               required
             />
           </Grid>
@@ -96,8 +100,8 @@ export const ActivityForm = ({ initialData, onCancel }) => {
               type="datetime-local"
               defaultValue={
                 // to convert from "2025-05-05T18:08:53.974063" to "2025-05-05T18:08"
-                initialData?.date
-                  ? new Date(initialData.date).toISOString().slice(0, 16)
+                activity?.date
+                  ? new Date(activity.date).toISOString().slice(0, 16)
                   : ""
               }
               //   required
@@ -110,7 +114,7 @@ export const ActivityForm = ({ initialData, onCancel }) => {
               select
               label="Category"
               name="category"
-              defaultValue={initialData?.category || ""}
+              defaultValue={activity?.category || ""}
               required
             >
               {categoryOptions.map((option) => (
@@ -126,7 +130,7 @@ export const ActivityForm = ({ initialData, onCancel }) => {
               fullWidth
               label="City"
               name="city"
-              defaultValue={initialData?.city || ""}
+              defaultValue={activity?.city || ""}
               required
             />
           </Grid>
@@ -136,14 +140,18 @@ export const ActivityForm = ({ initialData, onCancel }) => {
               fullWidth
               label="Venue"
               name="venue"
-              defaultValue={initialData?.venue || ""}
+              defaultValue={activity?.venue || ""}
               required
             />
           </Grid>
         </Grid>
 
         <Box mt={3} display="flex" justifyContent="flex-end" gap={2}>
-          <Button variant="outlined" onClick={onCancel}>
+          <Button
+            component={Link}
+            to={id ? `/activities/${id}` : "/"}
+            variant="outlined"
+          >
             Cancel
           </Button>
           <Button
@@ -151,7 +159,7 @@ export const ActivityForm = ({ initialData, onCancel }) => {
             variant="contained"
             disabled={updateActivity.isPending || createActivity.isPending}
           >
-            {initialData ? "Update" : "Create"}
+            {activity ? "Update" : "Create"}
           </Button>
         </Box>
       </Box>

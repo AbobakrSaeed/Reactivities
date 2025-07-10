@@ -9,9 +9,14 @@ import {
 } from "@mui/material";
 
 import { Adb as AdbIcon } from "@mui/icons-material";
-import { useActivityContext } from "../context/useActivityContext";
+import { useActivityContext } from "../../context/useActivityContext";
+import { NavLink } from "react-router";
 
-const pages = ["Products", "Pricing", "Blog"];
+const pages = [
+  { label: "Activities", path: "activities" },
+  { label: "Create Activity", path: "createactivity" },
+  { label: "Contact", path: "contact" },
+];
 
 export const Navbar = () => {
   const { showCreateForm } = useActivityContext();
@@ -24,10 +29,10 @@ export const Navbar = () => {
             <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
               <AdbIcon sx={{ mr: 1 }} />
               <Typography
+                component={NavLink}
+                to="/"
                 variant="h6"
                 noWrap
-                component="a"
-                href="#app-bar-with-responsive-menu"
                 sx={{
                   mr: 2,
                   display: { xs: "none", md: "block" },
@@ -45,19 +50,21 @@ export const Navbar = () => {
             <Box
               sx={{ flexGrow: 1, display: { xs: "none", md: "flex" }, gap: 5 }}
             >
-              {pages.map((page) => (
-                <Button
-                  key={page}
+              {pages.map(({ label, path }) => (
+                <Typography
+                  key={label}
+                  component={NavLink}
+                  to={`/${path}`}
                   sx={{
-                    my: 2,
-                    color: "white",
-                    display: "block",
-                    fontFamily: "monospace",
-                    fontWeight: 500,
+                    textDecoration: "none",
+                    color: "inherit",
+                    "&.active": {
+                      color: "yellow",
+                    },
                   }}
                 >
-                  <Typography>{page}</Typography>
-                </Button>
+                  {label}
+                </Typography>
               ))}
             </Box>
 

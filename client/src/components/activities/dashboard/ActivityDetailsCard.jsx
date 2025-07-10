@@ -8,14 +8,18 @@ import {
   Button,
 } from "@mui/material";
 import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
-import { useState, useEffect } from "react";
-import { useActivityContext } from "../../../context/useActivityContext";
+import { Link, useNavigate, useParams } from "react-router";
+import useActivities from "../../../libs/hooks/useActivities";
 
-const ActivityDetailsCard = ({ activity, onEdit, onCancel }) => {
-  const { activities } = useActivityContext();
-  const { title, date, description, category } = activities.find(
-    (a) => (a.id = activity.id)
-  );
+const ActivityDetailsCard = () => {
+  const params = useParams();
+  const navigate = useNavigate();
+
+  const { activity } = useActivities(params.id);
+
+  if (!activity) return <Typography>Activity not found</Typography>;
+
+  const { id, title, date, description, category } = activity;
 
   const formattedDate = new Date(date).toLocaleDateString(undefined, {
     weekday: "short",
@@ -24,25 +28,20 @@ const ActivityDetailsCard = ({ activity, onEdit, onCancel }) => {
     day: "numeric",
   });
 
-  const [imgSrc, setImgSrc] = useState(`images/categoryImages/${category}.jpg`);
-
-  // ✅ Update the image whenever the activity/category changes
-  useEffect(() => {
-    setImgSrc(`images/categoryImages/${category}.jpg`);
-  }, [category]);
+  const imageSrc = category
+    ? `/images/categoryImages/${category}.jpg`
+    : "/images/categoryImages/placeholder.jpg";
   return (
     <Card sx={{ maxWidth: 550, mt: 5, boxShadow: 5, borderRadius: 3 }}>
-      {/* Placeholder image */}
       <CardMedia
         component="img"
         height="250"
-        image={imgSrc}
-        onError={() => setImgSrc("images/placeholder.png")}
+        image={imageSrc}
         alt={`${category} image`}
       />
 
       <CardContent>
-        <Typography gutterBottom variant="h5" component="div">
+        <Typography gutterBottom variant="h5">
           {title}
         </Typography>
 
@@ -62,10 +61,19 @@ const ActivityDetailsCard = ({ activity, onEdit, onCancel }) => {
       </CardContent>
 
       <CardActions sx={{ justifyContent: "flex-end", px: 2, pb: 2 }}>
-        <Button variant="contained" color="primary" onClick={onEdit}>
+        <Button
+          component={Link}
+          to={`/form/${id}`}
+          variant="contained"
+          color="primary"
+        >
           Edit
         </Button>
-        <Button variant="outlined" color="error" onClick={onCancel}>
+        <Button
+          variant="outlined"
+          color="error"
+          onClick={() => navigate("/activities")}
+        >
           Cancel
         </Button>
       </CardActions>

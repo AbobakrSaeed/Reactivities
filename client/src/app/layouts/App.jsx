@@ -1,8 +1,8 @@
-import { ActivityProvider } from "./context/useActivityContext";
+import { ActivityProvider } from "../../context/useActivityContext";
 
-import ActivitiesDashboard from "./components/activities/dashboard/ActivitiesDashboard";
-import { Navbar } from "./components/Navbar";
+import { Navbar } from "./Navbar";
 import { Container } from "@mui/material";
+import { Outlet } from "react-router";
 
 function App() {
   return (
@@ -10,7 +10,7 @@ function App() {
       <ActivityProvider>
         <Navbar />
         <Container maxWidth="xl" sx={{ mt: 3 }}>
-          <ActivitiesDashboard />
+          <Outlet />
         </Container>
       </ActivityProvider>
     </>

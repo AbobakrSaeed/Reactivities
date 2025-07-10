@@ -2,7 +2,7 @@
 import { Box } from "@mui/material";
 import ActivityCard from "./ActivityCard";
 
-export const ActivityList = ({ activities, onSelect }) => {
+export const ActivityList = ({ activities }) => {
   return (
     <>
       <Box
@@ -24,7 +24,6 @@ export const ActivityList = ({ activities, onSelect }) => {
             <ActivityCard
               key={activity.id || activity.title}
               activity={activity}
-              onView={() => onSelect(activity)}
             />
           ))}
         </Box>
