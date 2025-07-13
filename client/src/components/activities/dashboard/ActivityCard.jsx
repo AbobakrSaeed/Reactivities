@@ -1,32 +1,37 @@
 /* eslint-disable react/prop-types */
 import {
-  Card,
-  CardContent,
-  CardHeader,
-  Typography,
-  Button,
+  Avatar,
   Box,
+  Button,
+  Card,
+  CardActions,
+  CardContent,
   Chip,
   Divider,
+  Typography,
 } from "@mui/material";
-import LocationOnIcon from "@mui/icons-material/LocationOn";
 import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
-import LocalBarIcon from "@mui/icons-material/LocalBar";
-import useActivities from "../../../libs/hooks/useActivities";
+import LocationOnIcon from "@mui/icons-material/LocationOn";
 import { Link } from "react-router";
+import { formatDistanceToNow } from "date-fns";
 
 const ActivityCard = ({ activity }) => {
-  const { id, title, description, date, category, city, venue } = activity;
-  const { deleteActivity } = useActivities();
+  const { id, title, date, venue, city, description, category } = activity;
 
-  const formattedDate = new Date(date).toLocaleDateString(undefined, {
-    weekday: "short",
-    year: "numeric",
-    month: "short",
-    day: "numeric",
-  });
+  const isHost = true;
+  const isGoing = false;
+  const isCancelled = false;
 
-  const categoryIcon = category === "drinks" ? <LocalBarIcon /> : null;
+  const label = isHost
+    ? "You are hosting this activity"
+    : isGoing
+    ? "You are going to this activity"
+    : null;
+  const color = isHost ? "secondary" : isGoing ? "warning" : "default";
+  const host= "Abobakr";
+
+  const formattedDate = new Date(date).toLocaleString();
+  const timeAgo = formatDistanceToNow(new Date(date), { addSuffix: true });
 
   return (
     <Card
@@ -34,68 +39,90 @@ const ActivityCard = ({ activity }) => {
         width: 700,
         mx: "auto",
         mt: 3,
-        boxShadow: 5,
         borderRadius: 3,
-        backgroundColor: "#fafafa",
+        boxShadow: 4,
+        overflow: "hidden",
+        backgroundColor: "#fff",
       }}
     >
-      <CardHeader
-        title={title}
-        subheader={city}
-        sx={{ backgroundColor: "#1976d2", color: "#fff" }}
-      />
-
-      <CardContent>
-        <Box display="flex" alignItems="center" gap={1} mb={1}>
-          <CalendarMonthIcon fontSize="small" color="action" />
+      {/* SECTION 1: Avatar + Title + Host */}
+      <Box display="flex" p={2} gap={2} alignItems="center">
+        <Avatar sx={{ width: 64, height: 64 }} />
+        <Box>
+          <Typography variant="h6">{title}</Typography>
           <Typography variant="body2" color="text.secondary">
-            {formattedDate}
+            Hosted by{" "}
+            <Typography
+              component={Link}
+              to={`/profile/${host?.username || "bob"}`}
+              color="primary"
+              sx={{ textDecoration: "none", fontWeight: 500 }}
+            >
+              {host?.displayName || "Bob"}
+            </Typography>
           </Typography>
         </Box>
+      </Box>
 
-        <Typography variant="body1" gutterBottom>
+      <Divider />
+
+      {/* SECTION 2: Date & Location */}
+      <Box display="flex" gap={3} flexWrap="wrap" p={2}>
+        <Box display="flex" alignItems="center" gap={1}>
+          <CalendarMonthIcon fontSize="small" />
+          <Typography variant="body2">{formattedDate}</Typography>
+        </Box>
+        <Box display="flex" alignItems="center" gap={1}>
+          <LocationOnIcon fontSize="small" />
+          <Typography variant="body2">
+            {venue}, {city}
+          </Typography>
+        </Box>
+      </Box>
+
+      <Divider />
+
+      {/* SECTION 3: Chips for labels */}
+      <Box px={2} py={1} display="flex" gap={1} flexWrap="wrap">
+       {label && <Chip label={label} color={color} />}
+            {isCancelled && <Chip label="Cancelled" color="error" />}
+        <Chip label={category} variant="outlined" />
+      </Box>
+
+      <Divider />
+
+      {/* SECTION 4: Description + Button */}
+      <CardContent sx={{ pt: 2, pb: 0 }}>
+        <Typography variant="body1" mb={2}>
           {description}
         </Typography>
-
-        <Divider sx={{ my: 1 }} />
-
-        <Box display="flex" alignItems="center" gap={1} mb={1}>
-          <LocationOnIcon fontSize="small" color="action" />
-          <Typography variant="body2" color="text.secondary">
-            {venue}
-          </Typography>
-        </Box>
-
-        <Box
-          display="flex"
-          justifyContent="space-between"
-          alignItems="center"
-          mt={2}
-        >
-          {/* Chips group on the left */}
-          <Box display="flex" gap={1}>
-            <Chip label={category} icon={categoryIcon} variant="outlined" />
-          </Box>
-
-          {/* Buttons group on the right */}
-          <Box display="flex" gap={1}>
-            <Button component={Link} to={`/activities/${id}`} size="small" variant="contained" >
-              View
-            </Button>
-            <Button
-              size="small"
-              variant="outlined"
-              color="error"
-              onClick={() => deleteActivity.mutate(id)}
-              disabled={deleteActivity.isPending}
-            >
-              Delete
-            </Button>
-          </Box>
-        </Box>
       </CardContent>
+
+      <CardActions
+        sx={{
+          px: 2,
+          pb: 2,
+          justifyContent: "space-between",
+          alignItems: "center",
+        }}
+      >
+        <Typography variant="body2" color="text.secondary">
+          Activity {timeAgo}
+        </Typography>
+        <Button
+          variant="contained"
+          size="small"
+          component={Link}
+          to={`/activities/${id}`}
+        >
+          VIEW
+        </Button>
+      </CardActions>
     </Card>
   );
 };
 
 export default ActivityCard;
+
+
+ 

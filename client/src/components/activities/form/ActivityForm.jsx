@@ -53,9 +53,8 @@ export const ActivityForm = () => {
         component="form"
         onSubmit={handleSubmit}
         sx={{
-          maxWidth: 500,
+          maxWidth: 700,
           mx: "auto",
-          mt: 5,
           p: 3,
           boxShadow: 4,
           borderRadius: 2,
@@ -69,7 +68,7 @@ export const ActivityForm = () => {
           {activity ? "Edit Activity" : "Create Activity"}
         </Typography>
 
-        <Grid container spacing={2} direction="column" width={500}>
+        <Grid container spacing={2} direction="column" width={'100%'}>
           <Grid item xs={12}>
             <TextField
               fullWidth

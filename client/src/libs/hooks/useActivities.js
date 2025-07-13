@@ -1,9 +1,11 @@
 import { useQueryClient, useMutation, useQuery } from "@tanstack/react-query";
 import baseApi from "../baseApi";
 import { CACHE_KEY_ACTIVITIES } from "../../constants/constants";
+import { useLocation } from "react-router";
 
 const useActivities = (id) => {
   const queryClient = useQueryClient();
+  const location = useLocation();
 
   // fetch all activities
   const {
@@ -13,6 +15,7 @@ const useActivities = (id) => {
   } = useQuery({
     queryKey: CACHE_KEY_ACTIVITIES,
     queryFn: () => baseApi.get("activities").then((response) => response.data),
+    enabled: !id&&  location.pathname == "/activities",
   });
 
   // fitch a specific activity
@@ -20,7 +23,7 @@ const useActivities = (id) => {
     queryKey: ["activities", id],
     queryFn: () =>
       baseApi.get(`activities/${id}`).then((response) => response.data),
-    enabled: !!id,
+    enabled: !!id, // Only fetch if id is truthy
   });
 
   //update

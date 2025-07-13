@@ -1,17 +1,32 @@
 import { ActivityProvider } from "../../context/useActivityContext";
 
 import { Navbar } from "./Navbar";
-import { Container } from "@mui/material";
-import { Outlet } from "react-router";
+import { Box, Container, CssBaseline } from "@mui/material";
+import { Outlet, useLocation } from "react-router";
+
+// Usually in index.js or App.js
+import "react-calendar/dist/Calendar.css";
+import HomePage from "../../components/home/HomePage";
 
 function App() {
+  const location = useLocation();
+
   return (
     <>
       <ActivityProvider>
-        <Navbar />
-        <Container maxWidth="xl" sx={{ mt: 3 }}>
-          <Outlet />
-        </Container>
+        <Box sx={{ bgcolor: "#eeeeee", minHeight: "100vh" , top: 0}}>
+        <CssBaseline/>
+        {location.pathname == "/" ? (
+          <HomePage />
+        ) : (
+          <>
+            <Navbar />
+            <Container maxWidth="xl" sx={{ mt: 3 }}>
+              <Outlet />
+            </Container>
+          </>
+        )}
+        </Box>
       </ActivityProvider>
     </>
   );
