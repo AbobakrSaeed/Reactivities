@@ -19,6 +19,7 @@ const pages = [
   { label: "Activities", path: "activities" },
   { label: "Create Activity", path: "createactivity" },
   { label: "Counter", path: "counter" },
+  { label: "Errors", path: "errors" },
 ];
 
 export const Navbar = () => {

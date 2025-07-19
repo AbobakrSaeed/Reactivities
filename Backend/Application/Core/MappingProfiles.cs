@@ -1,4 +1,5 @@
 using System;
+using Application.Activities.DTOs;
 using AutoMapper;
 using Domain;
 
@@ -10,6 +11,8 @@ public class MappingProfiles : Profile
     {
         CreateMap<Activity, Activity>()
             .ForMember(dest => dest.Id, opt => opt.Ignore());// This is the default mapping
+        CreateMap<CreateActivityDto, Activity>();
+        CreateMap<EditActivityDto, Activity>();
     }
 }
 

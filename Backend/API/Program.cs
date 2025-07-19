@@ -1,50 +1,84 @@
 using System.Reflection;
+using API.Middleware;
 using Application.Activities.Queries;
+using Application.Activities.validators;
 using Application.Core;
+using FluentValidation;
 using Microsoft.EntityFrameworkCore;
 using Persistence;
 
+
+//--------------------------------------------
+// Create builder
+//--------------------------------------------
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
+
+//--------------------------------------------
+// Services
+//--------------------------------------------
+
 
 builder.Services.AddControllers();
 
 
-//## Register the DbContext with SQLite
+// Register DbContext with SQLite
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection")));
 
-//##add cors services
-builder.Services.AddCors();
 
-//## Register MediatR for handling queries and commands
-builder.Services.AddMediatR(x => x.RegisterServicesFromAssemblyContaining<GetActivityList.Handler>());
+// Register MediatR
+builder.Services.AddMediatR(x => {
+    x.RegisterServicesFromAssemblyContaining<GetActivityList.Handler>();
+    x.AddOpenBehavior(typeof(ValidationBehavior<,>));}); // add the validation middleware
 
+// Register AutoMapper with license key (AutoMapper v15+)
+builder.Services.AddAutoMapper(cfg =>
+{
+    cfg.LicenseKey = builder.Configuration["AutoMapper:LicenseKey"]; // Best to store in appsettings.json or secrets
+    // ✅ Manually add profiles from the Application assembly
+    cfg.AddMaps(typeof(MappingProfiles).Assembly);
+});
 
+// register the fluent validation assembly
+builder.Services.AddValidatorsFromAssemblyContaining<CreateActivityValidator>();
+
+// register the exception middleware 
+builder.Services.AddTransient<ExceptionMiddleware>();
+
+// CORS policy
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowAll", policy =>
+    {
+        policy.AllowAnyOrigin()
+              .AllowAnyMethod()
+              .AllowAnyHeader();
+    });
+});
+//--------------------------------------------
+// Build app
+//--------------------------------------------
 var app = builder.Build();
 
-//## add CORS middleware
-app.UseCors(policy =>
-    policy.AllowAnyOrigin() // Allow any origin
-          .AllowAnyMethod() // Allow any HTTP method (GET, POST, etc.)
-          .AllowAnyHeader() // Allow any header
-          .AllowAnyOrigin()); // Allow specific origin
-//.WithOrigins("http://localhost:5173", "https://localhost:5173")
 
-// Configure the HTTP request pipeline.
-// if (app.Environment.IsDevelopment())
-// {
-//     app.MapOpenApi();
-// }
+//--------------------------------------------
+// Middleware
+//--------------------------------------------
 
-// app.UseHttpsRedirection();
+// use the exception middleware
+app.UseMiddleware<ExceptionMiddleware>();
+// cors
+app.UseCors("AllowAll");
+
 
 app.UseAuthorization();
 
 app.MapControllers();
 
-//## Initialize the database with seed data
+//--------------------------------------------
+// DB Initialization
+//--------------------------------------------
 using var scope = app.Services.CreateScope(); // Create a scope to resolve services
 var services = scope.ServiceProvider; // Get the service provider
 
@@ -53,13 +87,13 @@ try
     AppDbContext context = services.GetRequiredService<AppDbContext>(); // Resolve the AppDbContext
     await context.Database.MigrateAsync(); // Apply any pending migrations
     await DbInitializer.SeedData(context); // Seed the database with initial data
-    Console.WriteLine("Database initialized and seeded successfully.");
+    Console.WriteLine("✅ Database initialized and seeded.");
 }
 catch (Exception ex)
 {
     ILogger<Program> logger = services.GetRequiredService<ILogger<Program>>(); // Resolve the logger
-    logger.LogError(ex, "An error occurred during database initialization and seeding.");
+    logger.LogError(ex, "❌ Database initialization failed.");
 }
-////////////////////////
 
+//--------------------------------------------
 app.Run();

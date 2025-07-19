@@ -1,4 +1,6 @@
 using System;
+using Application.Activities.DTOs;
+using Application.Core;
 using AutoMapper;
 using Domain;
 using MediatR;
@@ -8,34 +10,30 @@ namespace Application.Activities.Commands;
 
 public class EditActivity
 {
-    public class Command : IRequest
+    public class Command : IRequest<Result<Unit>>
     {
-        public required Activity Activity { get; set; }
+        public required EditActivityDto ActivityDto { get; set; }
     }
-    public class Handler(AppDbContext context) : IRequestHandler<Command>
+    public class Handler(AppDbContext context, IMapper mapper) : IRequestHandler<Command, Result<Unit>>
     {
-        public async Task Handle(Command request, CancellationToken cancellationToken)
+        public async Task<Result<Unit>> Handle(Command request, CancellationToken cancellationToken)
         {
-            var activity = await context.Activities.FindAsync([request.Activity.Id], cancellationToken);
-            if (activity == null) throw new Exception("Activity not found");
-
-            // Update all properties at once except the key
-            context.Entry(activity).CurrentValues.SetValues(request.Activity); // we prefer to use auto mapper instead
+            var activity = await context.Activities.FindAsync([request.ActivityDto.Id], cancellationToken);
+            if (activity == null) return Result<Unit>.Failure("Activity not found", 404);
 
             ///-----------PAID LICENSE REQUIRED--------------
             // Use AutoMapper to map the properties from request.Activity to activity
-            // mapper.Map(request.Activity, activity);
+            mapper.Map(request.ActivityDto, activity);
 
-            var result = await context.SaveChangesAsync(cancellationToken);
+            var result = await context.SaveChangesAsync(cancellationToken) > 0;
 
-            if (result == 0)
-            {
-                throw new Exception("Failed to update activity.");
-            }
-          
+            if (!result) return Result<Unit>.Failure("Failed to update activity", 400);
+
+            return Result<Unit>.Success(Unit.Value);
+
         }
 
-       
+
     }
 
 }
