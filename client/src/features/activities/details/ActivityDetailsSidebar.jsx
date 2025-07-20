@@ -10,17 +10,34 @@ import {
   Box,
   Divider,
   useTheme,
-  Stack
+  Stack,
 } from "@mui/material";
-import {  Star, PeopleAlt } from "@mui/icons-material";
+import { Star, PeopleAlt } from "@mui/icons-material";
 
 export default function ActivityDetailsSidebar() {
   const theme = useTheme();
   const attendees = [
-    { id: 1, name: "Bob", isHost: true, following: true, image: "/assets/user.png" },
-    { id: 2, name: "Alice", isHost: false, following: false, image: "/assets/user.png" },
-        { id: 1, name: "Bob", isHost: true, following: true, image: "/assets/user.png" },
-
+    {
+      id: 1,
+      name: "Bob",
+      isHost: true,
+      following: true,
+      image: "/assets/user.png",
+    },
+    {
+      id: 2,
+      name: "Alice",
+      isHost: false,
+      following: false,
+      image: "/assets/user.png",
+    },
+    {
+      id: 3,
+      name: "Bob",
+      isHost: true,
+      following: true,
+      image: "/assets/user.png",
+    },
   ];
 
   return (
@@ -38,12 +55,13 @@ export default function ActivityDetailsSidebar() {
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
-          gap: 1
+          gap: 1,
         }}
       >
         <PeopleAlt fontSize="small" />
         <Typography variant="subtitle1" fontWeight={500}>
-          {attendees.length} {attendees.length === 1 ? "person" : "people"} going
+          {attendees.length} {attendees.length === 1 ? "person" : "people"}{" "}
+          going
         </Typography>
       </Paper>
 
@@ -53,7 +71,7 @@ export default function ActivityDetailsSidebar() {
         sx={{
           p: 2,
           borderRadius: 2,
-          border: `1px solid ${theme.palette.divider}`
+          border: `1px solid ${theme.palette.divider}`,
         }}
       >
         <List sx={{ p: 0 }}>
@@ -65,18 +83,20 @@ export default function ActivityDetailsSidebar() {
                   py: 1.5,
                   px: 0,
                   "&:hover": {
-                    backgroundColor: theme.palette.action.hover
-                  }
+                    backgroundColor: theme.palette.action.hover,
+                  },
                 }}
               >
-                <Box sx={{ 
-                  display: 'flex', 
-                  width: '100%', 
-                  justifyContent: 'space-between',
-                  alignItems: 'center'
-                }}>
+                <Box
+                  sx={{
+                    display: "flex",
+                    width: "100%",
+                    justifyContent: "space-between",
+                    alignItems: "center",
+                  }}
+                >
                   {/* Left Side - Avatar and Name */}
-                  <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                  <Box sx={{ display: "flex", alignItems: "center" }}>
                     <ListItemAvatar sx={{ minWidth: 48 }}>
                       <Avatar
                         alt={attendee.name}
@@ -100,7 +120,7 @@ export default function ActivityDetailsSidebar() {
                         variant="outlined"
                         sx={{
                           borderRadius: 1,
-                          borderColor: theme.palette.warning.main
+                          borderColor: theme.palette.warning.main,
                         }}
                       />
                     )}
@@ -108,9 +128,9 @@ export default function ActivityDetailsSidebar() {
                       <Typography
                         variant="caption"
                         color="text.secondary"
-                        sx={{ 
+                        sx={{
                           fontStyle: "italic",
-                          color: theme.palette.success.main
+                          color: theme.palette.success.main,
                         }}
                       >
                         Following

@@ -14,10 +14,13 @@ import { RouterProvider } from "react-router";
 import { router } from "./app/router/routes";
 import { StoreContext, store } from "./libs/stores/store";
 import { ToastContainer } from "react-toastify";
+import { LocalizationProvider } from "@mui/x-date-pickers";
+import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
 
 
 createRoot(document.getElementById("root")).render(
   <StrictMode>
+    <LocalizationProvider dateAdapter={AdapterDateFns}> {/* for MUI date picker */}
     <StoreContext.Provider value={store}>
       <QueryClientProvider client={new QueryClient()}>
         <ReactQueryDevtools initialIsOpen={false} />
@@ -29,5 +32,6 @@ createRoot(document.getElementById("root")).render(
         <RouterProvider router={router} />
       </QueryClientProvider>
     </StoreContext.Provider>
+    </LocalizationProvider>
   </StrictMode>
 );
