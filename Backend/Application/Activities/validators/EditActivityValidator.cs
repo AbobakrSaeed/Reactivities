@@ -11,5 +11,8 @@ public class EditActivityValidator : BaseActivityValidator<EditActivity.Command,
     {
         RuleFor(x => x.ActivityDto.Id)
                .NotEmpty().WithMessage("Id is required.");
+        
+        RuleFor(x => x.ActivityDto.Date)
+            .NotEmpty().WithMessage("Date is required.");
     }
 }

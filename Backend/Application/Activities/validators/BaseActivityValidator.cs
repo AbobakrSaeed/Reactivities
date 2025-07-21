@@ -17,9 +17,6 @@ public class BaseActivityValidator<T, TDto> : AbstractValidator<T> where TDto : 
             .NotEmpty().WithMessage("Description is required.")
             .MaximumLength(500).WithMessage("Description must be less than 500 characters.");
 
-        RuleFor(x => selector(x).Date)
-            .NotEmpty().WithMessage("Date is required.")
-            .GreaterThan(DateTime.UtcNow).WithMessage("Date must be in the future.");
 
         RuleFor(x => selector(x).Category)
             .NotEmpty().WithMessage("Category is required.");

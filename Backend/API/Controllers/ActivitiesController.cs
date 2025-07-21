@@ -2,6 +2,7 @@ using Application.Activities.Commands;
 using Application.Activities.DTOs;
 using Application.Activities.Queries;
 using Domain;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controllers;
@@ -10,6 +11,7 @@ namespace API.Controllers;
 // public class ActivitiesController(AppDbContext context, IMediator mediator) : BaseApiController
 public class ActivitiesController : BaseApiController
 {
+    [AllowAnonymous]
     [HttpGet]
     public async Task<ActionResult<List<Activity>>> GetActivities(CancellationToken cancellationToken)
     {
@@ -17,6 +19,8 @@ public class ActivitiesController : BaseApiController
         return await Mediator.Send(new GetActivityList.Query(), cancellationToken);
     }
 
+    // [Authorize], instead of using [Authorize] attribute for each endpoint, we will define an authorization policy in program.cs 
+    // and use [AllowAnonymous] attribute for endpoints that don't require authentication
     [HttpGet("{id}")]
     public async Task<ActionResult<Activity>> GetActivity(string id)
     {

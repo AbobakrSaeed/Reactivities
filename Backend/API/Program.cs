@@ -1,9 +1,12 @@
-using System.Reflection;
 using API.Middleware;
 using Application.Activities.Queries;
 using Application.Activities.validators;
 using Application.Core;
+using Domain;
 using FluentValidation;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc.Authorization;
 using Microsoft.EntityFrameworkCore;
 using Persistence;
 
@@ -19,7 +22,12 @@ var builder = WebApplication.CreateBuilder(args);
 //--------------------------------------------
 
 
-builder.Services.AddControllers();
+builder.Services.AddControllers(options =>
+    {
+        var policy = new AuthorizationPolicyBuilder().RequireAuthenticatedUser().Build();
+        options.Filters.Add(new AuthorizeFilter(policy));
+    }
+);
 
 
 // Register DbContext with SQLite
@@ -28,9 +36,11 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 
 
 // Register MediatR
-builder.Services.AddMediatR(x => {
+builder.Services.AddMediatR(x =>
+{
     x.RegisterServicesFromAssemblyContaining<GetActivityList.Handler>();
-    x.AddOpenBehavior(typeof(ValidationBehavior<,>));}); // add the validation middleware
+    x.AddOpenBehavior(typeof(ValidationBehavior<,>));
+}); // add the validation middleware
 
 // Register AutoMapper with license key (AutoMapper v15+)
 builder.Services.AddAutoMapper(cfg =>
@@ -46,6 +56,14 @@ builder.Services.AddValidatorsFromAssemblyContaining<CreateActivityValidator>();
 // register the exception middleware 
 builder.Services.AddTransient<ExceptionMiddleware>();
 
+// register the identity service
+builder.Services.AddIdentityApiEndpoints<User>(
+    options =>
+    {
+        options.User.RequireUniqueEmail = true;
+    }
+).AddRoles<IdentityRole>().AddEntityFrameworkStores<AppDbContext>();
+
 // CORS policy
 builder.Services.AddCors(options =>
 {
@@ -54,6 +72,7 @@ builder.Services.AddCors(options =>
         policy.AllowAnyOrigin()
               .AllowAnyMethod()
               .AllowAnyHeader();
+            //   .AllowCredentials();
     });
 });
 //--------------------------------------------
@@ -71,10 +90,11 @@ app.UseMiddleware<ExceptionMiddleware>();
 // cors
 app.UseCors("AllowAll");
 
-
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
+app.MapGroup("api").MapIdentityApi<User>();
 
 //--------------------------------------------
 // DB Initialization
@@ -85,8 +105,10 @@ var services = scope.ServiceProvider; // Get the service provider
 try
 {
     AppDbContext context = services.GetRequiredService<AppDbContext>(); // Resolve the AppDbContext
+    var userManager = services.GetRequiredService<UserManager<User>>(); // Resolve the AppDbContext
+
     await context.Database.MigrateAsync(); // Apply any pending migrations
-    await DbInitializer.SeedData(context); // Seed the database with initial data
+    await DbInitializer.SeedData(context, userManager); // Seed the database with initial data
     Console.WriteLine("✅ Database initialized and seeded.");
 }
 catch (Exception ex)
